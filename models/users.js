@@ -19,6 +19,7 @@ const userSchema=Mongoose.Schema(
             type:String,
             required:true
         }
+        
 
     }
 )
