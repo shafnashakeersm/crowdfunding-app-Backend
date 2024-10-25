@@ -63,7 +63,7 @@ app.post("/signin", async (req, res) => {
 })
 
 
-//***************************//create a post**********
+//***************************create a post**********
 app.post("/create",async(req,res)=>{
     let input=req.body             //passing input through body
     let token=req.headers.token    //passing token through headers
@@ -79,6 +79,11 @@ app.post("/create",async(req,res)=>{
             }
         })
 })
+
+
+//***************************Viewall med post**********
+
+
 
 
 // Starting the server on port 3030
