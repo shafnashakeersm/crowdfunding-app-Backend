@@ -4,6 +4,7 @@ const Bcrypt = require("bcrypt")   // Importing Bcrypt, a library for hashing pa
 const Cors = require("cors")    // Importing CORS middleware to enable Cross-Origin Resource Sharing, allowing external domains to access the API
 const jwt = require("jsonwebtoken")   // Importing jsonwebtoken, a library for generating and verifying JSON Web Tokens (JWT) used for authentication
 const userModel = require("./models/users")
+const postModel=require("./models/posts")
 
 let app = Express()   // Creating an Express application instance
 
@@ -19,7 +20,7 @@ app.post("/signUp", async (req, res) => {
     let hashedPassword = Bcrypt.hashSync(req.body.password, 10)//pass to model with encrypted password
     console.log(hashedPassword)
     req.body.password = hashedPassword  //to store password in req.body
-    //cconsole.log(data)   //to display data with only password is hashed
+    //console.log(data)   //to display data with only password is hashed
     //res.send(data)    //to send data to check whether it is work or not
     userModel.find({ email: req.body.email }).then(
         (items) => {
@@ -42,7 +43,7 @@ app.post("/signin", async (req, res) => {
             if (items.length > 0) {
                 const passwordValidator = Bcrypt.compareSync(req.body.password, items[0].password)
                 if (passwordValidator) {
-                    jwt.sign({ email: req.body.email }, "blogApp", { expiresIn: "1d" },
+                    jwt.sign({ email: req.body.email }, "crowdfundingApp", { expiresIn: "1d" },
                         (error, token) => {
                             if (error) {
                                 res.json({ "status": "error", "errorMessage": error })
@@ -60,6 +61,25 @@ app.post("/signin", async (req, res) => {
         }
     ).catch()
 })
+
+
+//***************************//create a post**********
+app.post("/create",async(req,res)=>{
+    let input=req.body             //passing input through body
+    let token=req.headers.token    //passing token through headers
+    jwt.verify(token,"crowdfundingApp",async(error,decoded)=>{
+        if (decoded && decoded.email) 
+            {
+                let result=new postModel(input)
+                await result.save()
+                res.json({"status":"success"})
+            }
+            else{
+                res.json({"status":"Invalid Authentication"})
+            }
+        })
+})
+
 
 // Starting the server on port 3030
 app.listen(3030, () => {
