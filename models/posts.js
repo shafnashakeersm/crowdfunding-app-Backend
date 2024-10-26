@@ -49,5 +49,14 @@ const postSchema =Mongoose.Schema(
     }
 });
 
+// Middleware to format 'dob' as 'DD-MM-YYYY'
+postSchema.pre('save', function (next) {
+    if (this.dob && typeof this.dob === 'string') {
+        const [year, month, day] = new Date(this.dob).toISOString().split('T')[0].split('-');
+        this.dob = `${day}-${month}-${year}`;
+    }
+    next();
+});
+
 var postModel = Mongoose.model("posts", postSchema);
 module.exports = postModel
