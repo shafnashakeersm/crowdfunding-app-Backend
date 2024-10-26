@@ -102,7 +102,22 @@ app.post("/viewmedpost",(req,res)=>{
     })
 })
 
-
+//***************************create a fudpost**********
+app.post("/fudpost",async(req,res)=>{
+    let input=req.body             //passing input through body
+    let token=req.headers.token    //passing token through headers
+    jwt.verify(token,"crowdfundingApp",async(error,decoded)=>{
+        if (decoded && decoded.email) 
+            {
+                let result=new fudpostModel(input)
+                await result.save()
+                res.json({"status":"success"})
+            }
+            else{
+                res.json({"status":"Invalid Authentication"})
+            }
+        })
+})
 
 
 
