@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken")   // Importing jsonwebtoken, a library for g
 const userModel = require("./models/users")
 const postModel=require("./models/posts")
 const fudpostModel=require("./models/viewfudpost")
+const camppostModel = require("./models/camp")
 
 let app = Express()   // Creating an Express application instance
 
@@ -142,6 +143,23 @@ app.post("/viewfudpost",(req,res)=>{
     })
 })
 
+
+//***************************create a camppost**********
+app.post("/camppost",async(req,res)=>{
+    let input=req.body             //passing input through body
+    let token=req.headers.token    //passing token through headers
+    jwt.verify(token,"crowdfundingApp",async(error,decoded)=>{
+        if (decoded && decoded.email) 
+            {
+                let result=new camppostModel(input)
+                await result.save()
+                res.json({"status":"success"})
+            }
+            else{
+                res.json({"status":"Invalid Authentication"})
+            }
+        })
+})
 
 
 // Starting the server on port 3030
