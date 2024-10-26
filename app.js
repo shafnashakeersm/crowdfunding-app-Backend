@@ -5,6 +5,7 @@ const Cors = require("cors")    // Importing CORS middleware to enable Cross-Ori
 const jwt = require("jsonwebtoken")   // Importing jsonwebtoken, a library for generating and verifying JSON Web Tokens (JWT) used for authentication
 const userModel = require("./models/users")
 const postModel=require("./models/posts")
+const fudpostModel=require("./models/viewfudpost")
 
 let app = Express()   // Creating an Express application instance
 
@@ -87,6 +88,31 @@ app.post("/viewmedpost",(req,res)=>{
     jwt.verify(token,"crowdfundingApp",(error,decoded)=>{
        if (decoded && decoded.email) {
             postModel.find().then(
+                (items)=>{
+                    res.json(items)
+                }
+            ).catch(
+                (error)=>{
+                    res.json({"status":"error"})
+                }
+            )
+       } else {
+        res.json({"status":"Invalid Authentication"})
+       }
+    })
+})
+
+
+
+
+
+
+//***************************Viewall food post**********
+app.post("/viewfudpost",(req,res)=>{
+    let token=req.headers.token
+    jwt.verify(token,"crowdfundingApp",(error,decoded)=>{
+       if (decoded && decoded.email) {
+            fudpostModel.find().then(
                 (items)=>{
                     res.json(items)
                 }
