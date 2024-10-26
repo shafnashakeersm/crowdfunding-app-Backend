@@ -162,6 +162,8 @@ app.post("/camppost",async(req,res)=>{
 })
 
 
+
+
 // Starting the server on port 3030
 app.listen(3030, () => {
     console.log("server started")
