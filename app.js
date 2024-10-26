@@ -161,6 +161,26 @@ app.post("/camppost",async(req,res)=>{
         })
 })
 
+//***************************Viewall campeign post**********
+app.post("/camp",(req,res)=>{
+    let token=req.headers.token
+    jwt.verify(token,"crowdfundingApp",(error,decoded)=>{
+       if (decoded && decoded.email) {
+            camppostModel.find().then(
+                (items)=>{
+                    res.json(items)
+                }
+            ).catch(
+                (error)=>{
+                    res.json({"status":"error"})
+                }
+            )
+       } else {
+        res.json({"status":"Invalid Authentication"})
+       }
+    })
+})
+
 
 // Starting the server on port 3030
 app.listen(3030, () => {
