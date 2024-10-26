@@ -63,7 +63,7 @@ app.post("/signin", async (req, res) => {
 })
 
 
-//***************************//create a post**********
+//***************************create a post**********
 app.post("/create",async(req,res)=>{
     let input=req.body             //passing input through body
     let token=req.headers.token    //passing token through headers
@@ -79,6 +79,28 @@ app.post("/create",async(req,res)=>{
             }
         })
 })
+
+
+//***************************Viewall med post**********
+app.post("/viewmedpost",(req,res)=>{
+    let token=req.headers.token
+    jwt.verify(token,"crowdfundingApp",(error,decoded)=>{
+       if (decoded && decoded.email) {
+            postModel.find().then(
+                (items)=>{
+                    res.json(items)
+                }
+            ).catch(
+                (error)=>{
+                    res.json({"status":"error"})
+                }
+            )
+       } else {
+        res.json({"status":"Invalid Authentication"})
+       }
+    })
+})
+
 
 
 // Starting the server on port 3030
