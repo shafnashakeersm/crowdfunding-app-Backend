@@ -7,11 +7,14 @@ const userModel = require("./models/users")
 const postModel=require("./models/posts")
 const fudpostModel=require("./models/viewfudpost")
 const camppostModel = require("./models/camp")
+const bodyParser = require("body-parser")
+const transModel = require("./models/transaction")
 
 let app = Express()   // Creating an Express application instance
 
 app.use(Express.json())
 app.use(Cors())
+app.use(bodyParser.json())
 
 Mongoose.connect("mongodb+srv://shafnashakeersm:Shafna123@cluster0.2srguee.mongodb.net/crowdfundingAppDb?retryWrites=true&w=majority&appName=Cluster0")
 
@@ -123,6 +126,9 @@ app.post("/fudpost",async(req,res)=>{
 
 
 
+
+
+
 //***************************Viewall food post**********
 app.post("/viewfudpost",(req,res)=>{
     let token=req.headers.token
@@ -180,6 +186,29 @@ app.post("/camp",(req,res)=>{
        }
     })
 })
+
+
+//***************************transaction API**********
+app.post("/transaction", async (req, res) => {
+    const { transactionId, amount, status, description } = req.body;
+
+    const transaction = new transModel({
+        transactionId,
+        amount,
+        status,
+        description
+    });
+
+    await transaction.save();
+    res.json({ message: 'Transaction created', transaction });
+});
+
+//**************************fatch all transaction**********
+app.get("/transactions", async (req, res) => {
+    const transactions = await transModel.find();
+    res.json(transactions);
+});
+
 
 
 // Starting the server on port 3030
