@@ -8,6 +8,7 @@ const postModel=require("./models/posts")
 const fudpostModel=require("./models/viewfudpost")
 const camppostModel = require("./models/camp")
 const bodyParser = require("body-parser")
+const transModel = require("./models/transaction")
 
 let app = Express()   // Creating an Express application instance
 
@@ -185,6 +186,29 @@ app.post("/camp",(req,res)=>{
        }
     })
 })
+
+
+//***************************transaction API**********
+app.post("/transaction", async (req, res) => {
+    const { transactionId, amount, status, description } = req.body;
+
+    const transaction = new transModel({
+        transactionId,
+        amount,
+        status,
+        description
+    });
+
+    await transaction.save();
+    res.json({ message: 'Transaction created', transaction });
+});
+
+//**************************fatch all transaction**********
+app.get("/transactions", async (req, res) => {
+    const transactions = await transModel.find();
+    res.json(transactions);
+});
+
 
 
 // Starting the server on port 3030
