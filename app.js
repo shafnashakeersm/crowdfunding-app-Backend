@@ -7,11 +7,13 @@ const userModel = require("./models/users")
 const postModel=require("./models/posts")
 const fudpostModel=require("./models/viewfudpost")
 const camppostModel = require("./models/camp")
+const bodyParser = require("body-parser")
 
 let app = Express()   // Creating an Express application instance
 
 app.use(Express.json())
 app.use(Cors())
+app.use(bodyParser.json())
 
 Mongoose.connect("mongodb+srv://shafnashakeersm:Shafna123@cluster0.2srguee.mongodb.net/crowdfundingAppDb?retryWrites=true&w=majority&appName=Cluster0")
 
@@ -119,6 +121,9 @@ app.post("/fudpost",async(req,res)=>{
             }
         })
 })
+
+
+
 
 
 
